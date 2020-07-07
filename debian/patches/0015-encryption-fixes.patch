@@ -5,7 +5,7 @@
      $url =~ s{^ldap:///}{}xmsi;
      if ($url eq $Wallet::Config::LDAP_SECRET) {
 -        die("ERROR: Invalid LDAP URL $url");
-+        my $msg = "\n"
++        my $msg = "\n";
 +        $msg .= "INFO: LDAP_SECRET contains a hostname\n";
 +        $msg .= "ERROR: Invalid LDAP_SECRET URL $url\n";
 +        die $msg;

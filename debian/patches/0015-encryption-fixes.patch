@@ -18,13 +18,15 @@
      my @parts = split /\?/, $url;
      my $base   = $parts[0];
 +    if (!$base) {
-+        die "INFO: LDAP_SECRET does not contain a base dn\n"
-+          . "ERROR: Invalid LDAP_SECRET URL $url\n";
++        $msg .= "INFO: LDAP_SECRET does not contain a base dn\n";
++        $msg .= "ERROR: Invalid LDAP_SECRET URL $url\n";
++        die $msg;
 +    }
      my $attr   = $parts[1];
 +    if (!$attr) {
-+        die "INFO: LDAP_SECRET does not contain an attribute\n"
-+          . "ERROR: Invalid LDAP_SECRET URL $url\n";
++        $msg .= "INFO: LDAP_SECRET does not contain an attribute\n";
++        $msg .= "ERROR: Invalid LDAP_SECRET URL $url\n";
++        die $msg;
 +    }
      my $scope  = $parts[2];
 +    if (!$scope) {
@@ -49,7 +51,9 @@
              $entry = $search->pop_entry;
          } elsif ($search->count > 1) {
 -            die 'ERROR: ' . $search->count . " LDAP entries found for $filter";
-+            die 'ERROR: ' . $search->count . " LDAP entries for $filter\n";
++            $msg .= 'ERROR: ' . $search->count . ' LDAP entries found for '
++              . "$filter\n";
++            die $msg;
          } else {
 -            die "ERROR: No entry found for $url";
 +            my $msg .= $search_details;
@@ -60,8 +64,9 @@
      if ($@) {
 -        die "INFO: LDAP search failed using $url\n"
 -          . "ERROR: $@";
-+        die "ERROR: LDAP search failed using $url\n"
-+          . "ERROR: $@" . "\n";
++        $msg .= "ERROR: LDAP search failed using $url\n";
++        $msg .=  "ERROR: $@" . "\n";
++        die $msg;
      }
      if (!$entry) {
 -        die "ERROR: No entry returned for LDAP search using $url";
@@ -75,13 +80,16 @@
      }
      if (!$return_val) {
 -        die "ERROR: Attribute not found $url";
-+        die $search_details . "ERROR: Attribute not found $url\n";
++        $msg .= $search_details;
++        $msg .= "ERROR: Attribute not found $url\n";
++        die $msg;
      }
      if ($cnt > 0) {
          my $obj_cnt = $cnt + 1;
 -        die "ERROR: LDAP search return too many values ($obj_cnt) for $url";
-+        die $search_details
-+          . "ERROR: LDAP returned too many values ($obj_cnt) for $url";
++        $msg .= $search_details;
++        $msg .= "ERROR: LDAP returned too many values ($obj_cnt) for $url";
++        die $msg;
      }
      return $return_val;
  }

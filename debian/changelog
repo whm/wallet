@@ -1,6 +1,7 @@
-wallet (1.4-7~dbpfocal2) unstable; urgency=medium
+wallet (1.4-7~dbpfocal2) focal; urgency=medium
 
   * Add checkfile patches back in now that they have been debugged.
+    This version is preserved only because there was a focal1 verison.
 
  -- Bill MacAllister <whm@dropbox.com>  Thu, 16 Jul 2020 18:47:49 +0000
 
